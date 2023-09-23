@@ -21,14 +21,13 @@ if (isset($_GET['edit_id'])) {
 
 // POST
 if (isset($_POST['btn_save'])) {
-    $product_image = strip_tags($_POST['product_image']);
     $product_name = strip_tags($_POST['product_name']);
     $price_buy = strip_tags($_POST['price_buy']);
     $price_sell = strip_tags($_POST['price_sell']);
     $stock = strip_tags($_POST['stock']);
 
     // Handle image upload
-    if (isset($_FILES['product_image'])) {
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['size'] > 0) {
         $file_name = $_FILES['product_image']['name'];
         $file_tmp = $_FILES['product_image']['tmp_name'];
         $file_size = $_FILES['product_image']['size'];
@@ -49,6 +48,8 @@ if (isset($_POST['btn_save'])) {
 
         move_uploaded_file($file_tmp, "uploads/" . $file_name);
         $product_image = "uploads/" . $file_name;
+    } else {
+        $product_image = $rowProduct['product_image'];
     }
 
     try {
@@ -98,7 +99,7 @@ if (isset($_POST['btn_save'])) {
                         <input type="file" class="form-control" id="product_image" name="product_image" accept="image/jpeg, image/png" onchange="previewImage()">
                         <small class="form-text text-muted">Max file size 100KB</small>
                         <?php if (isset($rowProduct['product_image'])) : ?>
-                            <img src="<?php echo $rowProduct['product_image']; ?>" width="100" height="100" id="preview">
+                            <img src="<?php echo $rowProduct['product_image']; ?>" width="100" id="preview">
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
